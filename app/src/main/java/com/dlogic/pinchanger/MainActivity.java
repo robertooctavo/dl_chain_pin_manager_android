@@ -110,6 +110,8 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
 
+                DisableButtons();
+
                 LOOP = true;
 
                 dialog = ProgressDialog.show(MainActivity.this, "",
@@ -133,6 +135,8 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
 
+                DisableButtons();
+
                 LOOP = true;
 
                 dialog = ProgressDialog.show(MainActivity.this, "",
@@ -144,7 +148,6 @@ public class MainActivity extends AppCompatActivity {
             public void handleMessage(android.os.Message msg) {
                 if(msg.what == STATUS_IS_OK)
                 {
-                    dialog.dismiss();
                     LOOP = false;
 
                     new Thread() {
@@ -235,6 +238,32 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    public void DisableButtons()
+    {
+        Button btnChangePIN = findViewById(R.id.btnChangePin);
+        Button btnUnblockPIN = findViewById(R.id.btnPinUnblockID);
+
+        btnChangePIN.setEnabled(false);
+        btnUnblockPIN.setEnabled(false);
+    }
+
+    public void EnableButtons()
+    {
+        runOnUiThread(new Runnable() {
+
+            @Override
+            public void run() {
+                Button btnChangePIN = findViewById(R.id.btnChangePin);
+                Button btnUnblockPIN = findViewById(R.id.btnPinUnblockID);
+
+                btnChangePIN.setEnabled(true);
+                btnUnblockPIN.setEnabled(true);
+
+                dialog.dismiss();
+            }
+        });
+    }
+
     public void ChangeUserPIN(String LOGINPIN, String NEWPIN)
     {
         short[] PinTriesRemaining = new short[1];
@@ -290,6 +319,8 @@ public class MainActivity extends AppCompatActivity {
         {
             ShowStatus("PIN successfully changed");
         }
+
+        EnableButtons();
     }
 
     public void UnblockPIN(String PUKSTR)
@@ -345,6 +376,8 @@ public class MainActivity extends AppCompatActivity {
         {
             ShowStatus("PIN successfully unblocked");
         }
+
+        EnableButtons();
     }
 
     public void onStop () {
